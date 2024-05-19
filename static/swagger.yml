@@ -1,0 +1,301 @@
+swagger: '2.0'
+info:
+  version: "1.0.0"
+  title: "Locations API"
+  description: "API for managing locations with JWT-based authentication"
+host: "localhost:5000"
+basePath: "/api"
+schemes:
+  - "http"
+paths:
+  /token/:
+    post:
+      summary: "Generate JWT tokens"
+      description: "Generates access and refresh tokens for authenticated users"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "User credentials"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              username:
+                type: "string"
+              password:
+                type: "string"
+              permissions:
+                type: "string"
+      responses:
+        200:
+          description: "Tokens generated"
+          schema:
+            type: "object"
+            properties:
+              access_token:
+                type: "string"
+              refresh_token:
+                type: "string"
+        401:
+          description: "Invalid username or password"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+  /refresh/:
+    get:
+      summary: "Refresh access token"
+      description: "Generates a new access token using a refresh token"
+      responses:
+        200:
+          description: "New access token generated"
+          schema:
+            type: "object"
+            properties:
+              access_token:
+                type: "string"
+        401:
+          description: "Invalid refresh token"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+  /location/{id}:
+    get:
+      summary: "Get location by ID"
+      description: "Returns location details for a specific ID"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Location found"
+          schema:
+            type: "object"
+        403:
+          description: "Unauthorized"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+        404:
+          description: "Location not found"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+        500:
+          description: "Internal server error"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+    delete:
+      summary: "Delete location by ID"
+      description: "Deletes a specific location by ID"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Location deleted"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+        403:
+          description: "Unauthorized"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+        404:
+          description: "Location not found"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+        500:
+          description: "Internal server error"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+  /location/:
+    get:
+      summary: "Get all locations"
+      description: "Returns all locations or a subset based on query parameters"
+      parameters:
+        - name: "from"
+          in: "query"
+          required: false
+          type: "integer"
+        - name: "count"
+          in: "query"
+          required: false
+          type: "integer"
+      responses:
+        200:
+          description: "Locations found"
+          schema:
+            type: "object"
+        403:
+          description: "Unauthorized"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+        404:
+          description: "Locations not found"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+        500:
+          description: "Internal server error"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+    post:
+      summary: "Add a new location"
+      description: "Adds a new location"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Location data"
+          required: true
+          schema:
+            type: "object"
+            additionalProperties:
+              type: "object"
+              properties:
+                name:
+                  type: "string"
+                description:
+                  type: "string"
+                rating:
+                  type: "integer"
+                favourite:
+                  type: "boolean"
+      responses:
+        201:
+          description: "Location created"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+        400:
+          description: "Bad request"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+        403:
+          description: "Unauthorized"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+        409:
+          description: "Conflict"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+        500:
+          description: "Internal server error"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+    put:
+      summary: "Update a location"
+      description: "Updates an existing location"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Location data"
+          required: true
+          schema:
+            type: "object"
+            additionalProperties:
+              type: "object"
+              properties:
+                name:
+                  type: "string"
+                description:
+                  type: "string"
+                rating:
+                  type: "integer"
+                favourite:
+                  type: "boolean"
+      responses:
+        200:
+          description: "Location updated"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+        400:
+          description: "Bad request"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+        403:
+          description: "Unauthorized"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+        404:
+          description: "Location not found"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+        500:
+          description: "Internal server error"
+          schema:
+            type: "object"
+            properties:
+              msg:
+                type: "string"
+definitions:
+  Location:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      description:
+        type: "string"
+      rating:
+        type: "integer"
+      favourite:
+        type: "boolean"
