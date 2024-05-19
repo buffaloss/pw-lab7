@@ -56,8 +56,27 @@ def add_location():
             file.write(dumps(locations, indent=4))
         return jsonify({'msg': 'Created'}), 201
 
-    except Exception as e:
-        print(e)
+    except:
+        return jsonify({'msg': 'Internal server error'}), 500
+
+
+@app.route('/api/location', methods=['PUT'])
+def update_location():
+    try:
+        with open('locations.json', 'r') as file:
+            locations = load(file)
+        data = request.get_json()
+        id = list(data.keys())[0]
+        if id not in locations:
+            return jsonify({'msg': 'Not found'}), 404
+        if "name" not in data[id] or "description" not in data[id] or "rating" not in data[id] or "favourite" not in data[id] or len(data[id]) != 4:
+            return jsonify({'msg': 'Bad request'}), 400
+        locations[id] = data
+        with open('locations.json', 'w') as file:
+            file.write(dumps(locations, indent=4))
+        return jsonify({'msg': 'Updated'}), 200
+
+    except:
         return jsonify({'msg': 'Internal server error'}), 500
 
 
