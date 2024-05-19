@@ -80,6 +80,22 @@ def update_location():
         return jsonify({'msg': 'Internal server error'}), 500
 
 
+@app.route('/api/location/<string:id>', methods=['DELETE'])
+def delete_location(id):
+    try:
+        with open('locations.json', 'r') as file:
+            locations = load(file)
+        if id not in locations:
+            return jsonify({'msg': 'Not found'}), 404
+        locations.pop(id)
+        with open('locations.json', 'w') as file:
+            file.write(dumps(locations, indent=4))
+        return jsonify({'msg': 'Deleted'}), 200
+
+    except:
+        return jsonify({'msg': 'Internal server error'}), 500
+
+
 try:
     open('locations.json')
 except FileNotFoundError:
