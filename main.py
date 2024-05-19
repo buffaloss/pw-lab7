@@ -1,4 +1,4 @@
-from json import loads, dumps
+from json import load, dumps
 from flask import Flask, request, jsonify
 
 app = Flask(__name__)
@@ -8,7 +8,7 @@ app = Flask(__name__)
 def location(id):
     try:
         with open('locations.json', 'r') as file:
-            locations = loads(file.read())
+            locations = load(file.read())
         if id in locations:
             return jsonify(locations[id]), 200
         else:
@@ -22,7 +22,7 @@ def location(id):
 def locations():
     try:
         with open('locations.json', 'r') as file:
-            locations = loads(file.read())
+            locations = load(file.read())
         
         if request.args.get('from'):
             from_id = int(request.args.get('from'))
@@ -37,6 +37,27 @@ def locations():
                 return jsonify(response), 200
 
     except:
+        return jsonify({'msg': 'Internal server error'}), 500
+
+
+@app.route('/api/location', methods=['POST'])
+def add_location():
+    try:
+        with open('locations.json', 'r') as file:
+            locations = load(file)
+        data = request.get_json()
+        for key in data.keys():
+            if "name" not in data[key] or "description" not in data[key] or "rating" not in data[key] or "favourite" not in data[key] or len(data[key]) != 4:
+                return jsonify({'msg': 'Bad request'}), 400
+            if key in locations.keys():
+                return jsonify({'msg': 'Conflict'}), 409
+            locations[key] = data[key]
+        with open('locations.json', 'w') as file:
+            file.write(dumps(locations, indent=4))
+        return jsonify({'msg': 'Created'}), 201
+
+    except Exception as e:
+        print(e)
         return jsonify({'msg': 'Internal server error'}), 500
 
 
