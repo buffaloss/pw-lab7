@@ -3,16 +3,17 @@ from datetime import timedelta
 from dotenv import dotenv_values
 from flask import Flask, request, jsonify
 from flask_jwt_extended import JWTManager, create_access_token, create_refresh_token, jwt_required, get_jwt_identity
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from flask_swagger_ui import get_swaggerui_blueprint
 
 config = dotenv_values()
 app = Flask(__name__)
+CORS(app, resources={r"/api/*": {"origins": "*"}})
+app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['JWT_SECRET_KEY'] = config['JWT_SECRET']
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=1)
 app.config['JWT_REFRESH_TOKEN_EXPIRES'] = timedelta(days=30)
 jwt = JWTManager(app)
-CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 app.register_blueprint(
     get_swaggerui_blueprint(
@@ -170,4 +171,5 @@ except FileNotFoundError:
         file.write('{}')
 
 
-app.run(host='0.0.0.0', port=5000)
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=5000, debug=True)
