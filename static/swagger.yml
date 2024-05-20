@@ -47,6 +47,13 @@ paths:
     get:
       summary: "Refresh access token"
       description: "Generates a new access token using a refresh token"
+      parameters:
+        - in: "header"
+          name: "Authorization"
+          description: "Bearer refresh token"
+          required: true
+          type: "string"
+          default: "Bearer "
       responses:
         200:
           description: "New access token generated"
@@ -67,6 +74,12 @@ paths:
       summary: "Get location by ID"
       description: "Returns location details for a specific ID"
       parameters:
+        - in: "header"
+          name: "Authorization"
+          description: "Bearer access token"
+          required: true
+          type: "string"
+          default: "Bearer "
         - name: "id"
           in: "path"
           required: true
@@ -101,6 +114,12 @@ paths:
       summary: "Delete location by ID"
       description: "Deletes a specific location by ID"
       parameters:
+        - in: "header"
+          name: "Authorization"
+          description: "Bearer access token"
+          required: true
+          type: "string"
+          default: "Bearer "
         - name: "id"
           in: "path"
           required: true
@@ -139,6 +158,12 @@ paths:
       summary: "Get all locations"
       description: "Returns all locations or a subset based on query parameters"
       parameters:
+        - in: "header"
+          name: "Authorization"
+          description: "Bearer access token"
+          required: true
+          type: "string"
+          default: "Bearer "
         - name: "from"
           in: "query"
           required: false
@@ -177,6 +202,12 @@ paths:
       summary: "Add a new location"
       description: "Adds a new location"
       parameters:
+        - in: "header"
+          name: "Authorization"
+          description: "Bearer access token"
+          required: true
+          type: "string"
+          default: "Bearer "
         - in: "body"
           name: "body"
           description: "Location data"
@@ -234,6 +265,12 @@ paths:
       summary: "Update a location"
       description: "Updates an existing location"
       parameters:
+        - in: "header"
+          name: "Authorization"
+          description: "Bearer access token"
+          required: true
+          type: "string"
+          default: "Bearer "
         - in: "body"
           name: "body"
           description: "Location data"
